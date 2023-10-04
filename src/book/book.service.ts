@@ -4,6 +4,8 @@ import { Book } from './schemas/book.schema';
 import * as mongoose from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
 
+import { Query } from 'express-serve-static-core'
+
 @Injectable()
 export class BookService {
     constructor(
@@ -14,6 +16,34 @@ export class BookService {
     async createBook(book: CreateBookDto): Promise<Book> {
         const bookRes = await this.bookModel.create(book);
         return bookRes;
+    }
+
+    async findBooksFilterByKeyword(query: Query) {
+
+        const resPerPage = 3
+        const currentPage = Number(query.page) || 1
+        const skip = resPerPage * (currentPage - 1) // --> paginacion
+
+        const keyword = query.keyword ? { // filtra por palabra
+            title: {
+                $regex: query.keyword,
+                $options: 'i'
+            }
+        } : {  }
+
+        const total = await this.findAll()
+
+        const books = await this.bookModel
+            .find({ ...keyword })
+            .limit(resPerPage) // Especifica el número máximo de documentos que devolverá la consulta.
+            .skip(skip); // skip: Especifica el número de documentos que se omitirán.
+        
+        return {
+            currentPage,
+            elements: books.length,
+            total: total.length,
+            books: [...books],
+        };
     }
 
     async findAll(): Promise <Book[]> {
