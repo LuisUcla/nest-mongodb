@@ -3,10 +3,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 export enum Category  {
-        ADVENTURE = 'Adventure',
-        CALSSICS = 'Calssics',
-        CRIME = 'Crime',
-        FANTASY = 'Fantasy'
+  ADVENTURE = 'Adventure',
+  CALSSICS = 'Calssics',
+  CRIME = 'Crime',
+  FANTASY = 'Fantasy'
 }
 
 @Schema()
@@ -17,7 +17,7 @@ export class Book {
   @Prop()
   description: string;
 
-  @Prop()
+  @Prop({ required: [true, 'Author is required'] })
   author: string;
 
   @Prop()
