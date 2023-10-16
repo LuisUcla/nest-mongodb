@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schemas/book.schema';
 import * as mongoose from 'mongoose';
@@ -14,6 +14,18 @@ export class BookService {
     ) {}
 
     async createBook(book: CreateBookDto): Promise<Book> {
+
+        const bookAlreadyExists = await this.bookModel.findOne({
+            title: book.title,
+            author: book.author,
+            category: book.category
+        })
+        console.log(bookAlreadyExists)
+
+        if (bookAlreadyExists) {
+            throw new ConflictException('Book already exists...')
+        }
+
         const bookRes = await this.bookModel.create(book);
         return bookRes;
     }
