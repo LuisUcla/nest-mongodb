@@ -17,7 +17,7 @@ export class Book {
   @Prop()
   description: string;
 
-  @Prop({ required: [true, 'Author is required'] })
+  @Prop()
   author: string;
 
   @Prop()
