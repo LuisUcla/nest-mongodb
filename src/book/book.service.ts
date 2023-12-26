@@ -6,6 +6,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 
 import { Query } from 'express-serve-static-core'
 import { User } from '../auth/schemas/user.schema';
+import { UserActiveInterface } from 'src/shared/interfaces/user-active.interface';
 
 @Injectable()
 export class BookService {
@@ -14,29 +15,29 @@ export class BookService {
         private bookModel: mongoose.Model<Book>
     ) {}
 
-    async createBook(book: CreateBookDto, user: User): Promise<Book> {
+    async create(book: CreateBookDto, user: User): Promise<Book> {
 
-        const bookAlreadyExists = await this.bookModel.findOne({
-            title: book.title,
-            author: book.author,
-            category: book.category
-        })
+        // const bookAlreadyExists = await this.bookModel.findOne({
+        //     title: book.title,
+        //     author: book.author,
+        //     category: book.category
+        // })
 
-        if (bookAlreadyExists) {
-            throw new ConflictException('The book already exists with that author and category....')
-        }
+        // if (bookAlreadyExists) {
+        //     throw new ConflictException('The book already exists with that author and category....')
+        // }
 
-        const data = { ...book, user: user._id }
+        const data = Object.assign(book, { user: user._id })
 
         const bookRes = await this.bookModel.create(data);
         return bookRes;
     }
 
-    async findBooksFilterByKeyword(query: Query) { // se usa para busqueda por titulo
+    async findBooksFilterByKeyword(query: Query): Promise<Book[]> { // se usa para busqueda por titulo
 
-        const resPerPage = Number(query.resPerPage) || 1
-        const currentPage = Number(query.page) || 1
-        const skip = resPerPage * (currentPage - 1) // --> paginacion
+        const resPerPage = 2; // elementos por pagina.
+        const currentPage = Number(query.page) || 1;
+        const skip = resPerPage * (currentPage - 1); // --> paginacion
 
         const keyword = query.keyword ? { // filtra por palabra
             title: {
@@ -45,33 +46,20 @@ export class BookService {
             }
         } : {  }
 
-        const total = await this.findAll()
-
         const books = await this.bookModel
             .find({ ...keyword })
             .limit(resPerPage) // Especifica el número máximo de documentos que devolverá la consulta.
             .skip(skip); // skip: Especifica el número de documentos que se omitirán.
 
             // logic
-            const numberPages = resPerPage !== 0 ? Math.ceil(total.length / resPerPage) : 5;
-            const prev = currentPage !== 1 && books.length ? true : false;
-            const next = currentPage !== numberPages && books.length ? true : false;
         
-        return {
-            currentPage,
-            elements: books.length,
-            total: total.length,
-            prev,
-            numberPages,
-            next,
-            books
-        };
+        return books;
     }
 
     async findAll(): Promise <Book[]> {
         const books = await this.bookModel
             .find()
-            .populate('user', ['name', 'email'],);
+            //.populate('user', ['name', 'email']);
 
         return books;
     }
@@ -84,9 +72,8 @@ export class BookService {
             throw new BadRequestException('Id is invalid, enter Id Correct...')
         }
         
-        const book = await this.bookModel
-            .findById(id)
-            .populate('user', ['name', 'email'],);
+        const book = await this.bookModel.findById(id)
+            // .populate('user', ['name', 'email'],); para hacer relacion con las demas tablas
         
         if (!book) {
             throw new NotFoundException('Book Not Found...')
@@ -117,6 +104,6 @@ export class BookService {
             throw new BadRequestException('Id is invalid, enter Id Correct...')
         }
         
-        return await this.bookModel.findByIdAndDelete(id);
+        return await this.bookModel.findByIdAndDelete(id)
     }
 }
