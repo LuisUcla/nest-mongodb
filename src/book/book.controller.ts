@@ -7,7 +7,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { Query as ExpressQuery } from 'express-serve-static-core'
 import { AuthGuard } from '../auth/guard/auth.guard';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard) // para autenticar con uso de jwt
 @Controller('books')
 export class BookController {
     constructor(private bookService: BookService) {}
@@ -22,8 +22,8 @@ export class BookController {
         return this.bookService.findAll()
     }
 
-    @Get('keyword')
-    async getBooksFilterByKeyword(@Query() query: ExpressQuery): Promise<Book[]> {
+    @Get('filter')
+    async getBooksFilterByKeyword(@Query() query: ExpressQuery) {
         return this.bookService.findBooksFilterByKeyword(query)
     }
 

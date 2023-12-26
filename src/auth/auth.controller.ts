@@ -18,7 +18,7 @@ export class AuthController {
         return this.authService.signIn(signInDto)
     }
 
-    @UseGuards(AuthGuard)
+    //@UseGuards(AuthGuard) // metodo de ejemplo de los guardas
     @Get('profile')
     profile(@Request() req) {
         return req.user
