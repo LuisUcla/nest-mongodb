@@ -1,5 +1,5 @@
 import { User } from "../../auth/schemas/user.schema";
-import { Category } from "../schemas/book.schema";
+import { Category } from "../../shared/enums/category.enum";
 import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional, IsEmpty } from "class-validator";
 
 export class UpdateBookDto {
