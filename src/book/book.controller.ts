@@ -14,31 +14,31 @@ export class BookController {
 
     @Post()
     async createBook(@Body() book: CreateBookDto, @Req() req): Promise<Book> {
-        return this.bookService.createBook(book, req.user)
+        return this.bookService.create(book, req.user)
     }
 
     @Get()
-    async getAllBooks() {
+    async getAllBooks(): Promise <Book[]> {
         return this.bookService.findAll()
     }
 
     @Get('keyword')
-    async getBooksFilterByKeyword(@Query() query: ExpressQuery) {
+    async getBooksFilterByKeyword(@Query() query: ExpressQuery): Promise<Book[]> {
         return this.bookService.findBooksFilterByKeyword(query)
     }
 
-    @Get(':id') 
-    async getBook(@Param('id') id: string) {
+    @Get(':id')
+    async getBook(@Param('id') id: string): Promise<Book> {
         return this.bookService.findById(id)
     }
 
     @Put(':id') 
-    async updateBook(@Param('id') id: string, @Body() book: UpdateBookDto) {
+    async updateBook(@Param('id') id: string, @Body() book: UpdateBookDto): Promise<Book> {
         return this.bookService.updateById(id, book)
     }
 
     @Delete(':id') 
-    async deteleBook(@Param('id') id: string) {
+    async deteleBook(@Param('id') id: string): Promise<Book> {
         return this.bookService.deleteById(id);
     }
 }
