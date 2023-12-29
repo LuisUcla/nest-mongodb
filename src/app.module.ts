@@ -9,10 +9,10 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.env.${process.env.NODE_ENV}`, // 'test' o 'development'
       isGlobal: true
     }), 
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/library-nest-api'),
+    MongooseModule.forRoot(process.env.DB_URI),
     BookModule,
     AuthModule],
   controllers: [AppController],
