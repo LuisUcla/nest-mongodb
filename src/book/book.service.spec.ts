@@ -111,7 +111,7 @@ describe('BookService', () => {
                 title: { $regex: 'test', $options: 'i' }
             })
 
-            expect(result).toEqual([mockBook])
+            expect(result).toEqual({ filter: [mockBook]})
         })
     })
 
@@ -152,15 +152,15 @@ describe('BookService', () => {
     });
 
     describe('deleteById', () => {
-        it('should delete and return a book', async () => {
+        it('should delete and return a json { deleted: true }', async () => {
         
-            jest.spyOn(model, 'findByIdAndDelete').mockResolvedValue(mockBook);
+            jest.spyOn(model, 'findByIdAndDelete').mockResolvedValue({ deleted: true });
 
             const result = await bookService.deleteById(mockBook._id);
 
             expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook._id)
 
-            expect(result).toEqual(mockBook);
+            expect(result).toEqual({ deleted: true });
         })
     })
 })

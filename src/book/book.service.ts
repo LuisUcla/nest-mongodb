@@ -33,7 +33,7 @@ export class BookService {
         return bookRes;
     }
 
-    async findBooksFilterByKeyword(query: Query): Promise<Book[]> { // se usa para busqueda por titulo
+    async findBooksFilterByKeyword(query: Query): Promise<{ filter: Book[] }> { // se usa para busqueda por titulo
 
         const resPerPage = 2; // elementos por pagina.
         const currentPage = Number(query.page) || 1;
@@ -53,7 +53,7 @@ export class BookService {
 
             // logic
         
-        return books;
+        return { filter: books};
     }
 
     async findAll(): Promise <Book[]> {
@@ -96,7 +96,7 @@ export class BookService {
         });
     }
 
-    async deleteById(id: string): Promise<Book> {
+    async deleteById(id: string): Promise<{ deleted: boolean }> {
 
         const isValidId = mongoose.isValidObjectId(id);
         
@@ -104,6 +104,7 @@ export class BookService {
             throw new BadRequestException('Id is invalid, enter Id Correct...')
         }
         
-        return await this.bookModel.findByIdAndDelete(id)
+        await this.bookModel.findByIdAndDelete(id);
+        return { deleted: true };
     }
 }
