@@ -1,15 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { BookService } from "./book.service"
-import { getModelToken } from '@nestjs/mongoose';
-import { Book } from "./schemas/book.schema";
-import mongoose, { Model } from "mongoose";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { User } from "../auth/schemas/user.schema";
 import { Category } from "../shared/enums/category.enum";
 import { BookController } from "./book.controller";
 import { JwtModule } from "@nestjs/jwt";
-import { mock } from "node:test";
 import { UpdateBookDto } from "./dto/update-book.dto";
  
 describe('BookController', () => {

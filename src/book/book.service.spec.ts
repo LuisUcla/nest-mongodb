@@ -28,13 +28,14 @@ describe('BookService', () => {
         email: "luis@gmail.com"
     }
 
-    const mockBookservice = {
+    const mockBookservice = { // para simular los casos de prueba sin usar datos reales
         find: jest.fn(),
         create: jest.fn(),
-        findById: jest.fn(), // para simular los casos de prueba sin usar datos reales
+        findById: jest.fn(), 
         findByIdAndUpdate: jest.fn(),
         findByIdAndDelete: jest.fn()
     };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -71,7 +72,7 @@ describe('BookService', () => {
                 mockUser as User
             )
 
-            expect(result).toEqual(mockBook)
+            expect(result).toEqual(mockBook);
         })
     });
 
