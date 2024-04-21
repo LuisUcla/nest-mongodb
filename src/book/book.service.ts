@@ -6,7 +6,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 
 import { Query } from 'express-serve-static-core'
 import { User } from '../auth/schemas/user.schema';
-import { UserActiveInterface } from 'src/shared/interfaces/user-active.interface';
+import { UserActiveInterface } from '../shared/interfaces/user-active.interface';
 
 @Injectable()
 export class BookService {
@@ -15,7 +15,7 @@ export class BookService {
         private bookModel: mongoose.Model<Book>
     ) {}
 
-    async create(book: CreateBookDto, user: User): Promise<Book> {
+    async create(book: CreateBookDto, user: UserActiveInterface): Promise<Book> {
 
         // const bookAlreadyExists = await this.bookModel.findOne({
         //     title: book.title,
@@ -27,8 +27,7 @@ export class BookService {
         //     throw new ConflictException('The book already exists with that author and category....')
         // }
 
-        const data = Object.assign(book, { user: user._id })
-
+        const data = { ...book, user: user._id };
         const bookRes = await this.bookModel.create(data);
         return bookRes;
     }
